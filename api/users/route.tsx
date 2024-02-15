@@ -27,3 +27,28 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json(user);
 }
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { firstName, lastName, email, password } = await request.json();
+
+  //TODO: Add validation
+
+  const user = await prisma.user.findUnique({ where: { id: params.id } });
+  if (!user)
+    return NextResponse.json({ status: 404, message: "User not Found" });
+
+  const updatedUser = await prisma.user.update({
+    where: { id: params.id },
+    data: {
+      firstName,
+      lastName,
+      email,
+      password
+    },
+  });
+
+  return NextResponse.json(updatedUser);
+}
