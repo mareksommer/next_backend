@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       firstName,
       lastName,
       email,
-      password
+      password,
     },
   });
 
@@ -46,9 +46,22 @@ export async function PUT(
       firstName,
       lastName,
       email,
-      password
+      password,
     },
   });
 
   return NextResponse.json(updatedUser);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const user = await prisma.user.findUnique({ where: { id: params.id } });
+  if (!user)
+    return NextResponse.json({ status: 404, message: "User not Found" });
+
+  await prisma.user.delete({ where: { id: params.id } });
+
+  return NextResponse.json({ status: 200, message: "User deleted" });
 }
