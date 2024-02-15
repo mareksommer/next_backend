@@ -12,6 +12,10 @@ export async function POST(request: NextRequest) {
 
   //TODO: Add validation
 
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser)
+    return NextResponse.json({ status: 400, message: "User already exists" });
+
   const user = await prisma.user.create({
     data: {
       firstName,
