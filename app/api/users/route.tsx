@@ -1,5 +1,6 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { postSchema, patchSchema, deleteSchema } from "./schema";
 
 export async function GET(request: NextRequest) {
   const users = await prisma.user.findMany({ orderBy: { lastName: "asc" } });
@@ -10,7 +11,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const { firstName, lastName, email, password } = await request.json();
 
-  //TODO: Add validation
+  const validation = postSchema.safeParse({ firstName, lastName, email, password });
+  if (!validation.success)
+    return NextResponse.json({ status: 400, message: validation.error.errors });
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser)
@@ -28,13 +31,19 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(user);
 }
 
-export async function PUT(
+export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { firstName, lastName, email, password } = await request.json();
 
-  //TODO: Add validation
+  if (!params || !params.id)
+    return NextResponse.json({ status: 400, message: "ID is required" });
+
+  const validation = patchSchema.safeParse({ id: params.id, firstName, lastName, email, password });
+  if (!validation.success)
+    return NextResponse.json({ status: 400, message: validation.error.errors });
+
 
   const user = await prisma.user.findUnique({ where: { id: params.id } });
   if (!user)
@@ -57,6 +66,13 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  if (!params || !params.id)
+    return NextResponse.json({ status: 400, message: "ID is required" });
+
+  const validation = deleteSchema.safeParse({ id: params.id });
+  if (!validation.success)
+    return NextResponse.json({ status: 400, message: validation.error.errors });
+
   const user = await prisma.user.findUnique({ where: { id: params.id } });
   if (!user)
     return NextResponse.json({ status: 404, message: "User not Found" });
