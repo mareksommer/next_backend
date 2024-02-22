@@ -1,0 +1,6 @@
+{
+  "UserAlreadyExists": "Uživatel již existuje",
+  "UserNotFound": "Uživatel nenalezen",
+  "UserDeleted": "Uživatel smazán",
+  "IdIsRequired": "ID je vyžadováno"
+}
