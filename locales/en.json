@@ -1,0 +1,6 @@
+{
+  "UserAlreadyExists": "User already exists",
+  "UserNotFound": "User not found",
+  "UserDeleted": "User deleted",
+  "IdIsRequired": "ID is required"
+}
