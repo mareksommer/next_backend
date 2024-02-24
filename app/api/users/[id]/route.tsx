@@ -1,17 +1,24 @@
-import prisma from "@/prisma/client";
-import { NextRequest, NextResponse } from "next/server";
-import { t } from "@/locales/translate";
+import { NextRequest } from "next/server";
+import { processRequest } from "@/services/request";
+import { getUser, updateUser, deleteUser } from "@/models/user";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  if (!params || !params.id)
-    return NextResponse.json({ status: 400, message: t("IdIsRequired") });
+  return processRequest(getUser, { id: params.id });
+}
 
-  const user = await prisma.user.findUnique({ where: { id: params.id } });
-  if (!user)
-    return NextResponse.json({ status: 404, message: t("UserNotFound") });
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  return processRequest(updateUser, {request: request, id: params.id});
+}
 
-  return NextResponse.json(user);
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  return processRequest(deleteUser, { id: params.id });
 }
