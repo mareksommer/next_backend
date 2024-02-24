@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUsers, createUser } from "@/models/user";
+import { getUsers, createUser } from "@/models/user/user";
 import { processRequest } from "@/services/request";
 
 export async function GET(request: NextRequest) {
