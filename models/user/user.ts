@@ -1,30 +1,10 @@
-//validation
-import { ZodIssue, z } from "zod";
-
-export const postSchema = z.object({
-  email: z.string().email(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  password: z.string().min(6),
-});
-
-export const patchSchema = z.object({
-  id: z.string(),
-  email: z.string().email().optional(),
-  firstName: z.string().nullable().optional(),
-  lastName: z.string().nullable().optional(),
-  password: z.string().min(6).optional(),
-});
-
-export const idSchema = z.object({
-  id: z.string(),
-});
-
-//db operations
+import { ZodIssue } from "zod";
 import prisma from "@/prisma/client";
 import { NextRequest } from "next/server";
 import { t } from "@/locales/translate";
 import { User } from "@prisma/client";
+import { idSchema, patchSchema, postSchema } from "./validation.schema";
+import { create, findUnique, remove, update } from "./db";
 
 interface ReturnObject {
   status: number;
@@ -35,6 +15,12 @@ interface ReturnObject {
 interface UserId {
   id: string;
 }
+
+interface UpdateUserArgs {
+  request: NextRequest;
+  id: string;
+}
+
 
 export const getUsers = async (
   request: NextRequest
@@ -71,11 +57,6 @@ export const createUser = async (
   return { status: 201, message: t("User created"), user };
 };
 
-interface UpdateUserArgs {
-  request: NextRequest;
-  id: string;
-}
-
 export const updateUser = async ({
   request,
   id,
@@ -102,47 +83,3 @@ export const deleteUser = async ({ id }: UserId): Promise<ReturnObject> => {
   return { status: 200, message: t("User deleted"), user };
 };
 
-export const create = async (
-  data: z.infer<typeof postSchema>
-): Promise<User> => {
-  return await prisma.user.create({
-    data: {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-    },
-  });
-};
-
-export const findUnique = async (where: any): Promise<User | null> => {
-  return await prisma.user.findUnique(where);
-};
-
-export const update = async (
-  id: string,
-  data: z.infer<typeof patchSchema>
-): Promise<User | null> => {
-  const user = await prisma.user.findUnique({ where: { id } });
-  if (!user) return null;
-
-  const updatedUser = await prisma.user.update({
-    where: { id },
-    data: {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-    },
-  });
-
-  return updatedUser;
-};
-
-export const remove = async (id: string): Promise<User | null> => {
-  const user = await prisma.user.findUnique({ where: { id } });
-  if (!user) return null;
-
-  await prisma.user.delete({ where: { id } });
-  return user;
-};
