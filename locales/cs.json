@@ -1,6 +1,8 @@
 {
-  "UserAlreadyExists": "Uživatel již existuje",
-  "UserNotFound": "Uživatel nenalezen",
-  "UserDeleted": "Uživatel smazán",
-  "IdIsRequired": "ID je vyžadováno"
+  "Something went wrong": "Něco se pokazilo",
+  "User already exists": "Uživatel již existuje",
+  "User not found": "Uživatel nenalezen",
+  "User created": "Uživatel vytvořen",
+  "User updated": "Uživatel aktualizován",
+  "User deleted": "Uživatel smazán"
 }

@@ -1,6 +1,8 @@
 {
-  "UserAlreadyExists": "User already exists",
-  "UserNotFound": "User not found",
-  "UserDeleted": "User deleted",
-  "IdIsRequired": "ID is required"
+  "Something went wrong": "Something went wrong",
+  "User already exists": "User already exists",
+  "User not found": "User not found",
+  "User created": "User created",
+  "User updated": "User updated",
+  "User deleted": "User deleted"
 }
