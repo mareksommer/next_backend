@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 import { t } from "@/locales/translate";
 import { User } from "@prisma/client";
 import { idSchema, patchSchema, postSchema } from "./validation.schema";
-import { create, findUnique, remove, update } from "./db";
+import { create, findUnique, findMany, remove, update } from "./db";
 
 interface ReturnObject {
   status: number;
@@ -25,7 +25,7 @@ interface UpdateUserArgs {
 export const getUsers = async (
   request: NextRequest
 ): Promise<ReturnObject> => {
-  const users = await prisma.user.findMany({ orderBy: { lastName: "asc" } });
+  const users = await findMany({ orderBy: { lastName: "asc" } });
   return { status: 200, users };
 };
 
