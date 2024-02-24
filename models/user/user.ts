@@ -1,5 +1,4 @@
 import { ZodIssue } from "zod";
-import prisma from "@/prisma/client";
 import { NextRequest } from "next/server";
 import { t } from "@/locales/translate";
 import { User } from "@prisma/client";
