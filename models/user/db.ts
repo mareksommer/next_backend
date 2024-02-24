@@ -3,6 +3,14 @@ import prisma from "@/prisma/client";
 import { User } from "@prisma/client";
 import { patchSchema, postSchema } from "./validation.schema";
 
+export const findMany = async (conditions: any): Promise<User[]> => {
+  return await prisma.user.findMany(conditions);
+}
+
+export const findUnique = async (where: any): Promise<User | null> => {
+  return await prisma.user.findUnique(where);
+};
+
 export const create = async (
   data: z.infer<typeof postSchema>
 ): Promise<User> => {
@@ -14,10 +22,6 @@ export const create = async (
       password: data.password,
     },
   });
-};
-
-export const findUnique = async (where: any): Promise<User | null> => {
-  return await prisma.user.findUnique(where);
 };
 
 export const update = async (
