@@ -11,6 +11,7 @@ interface ReturnObject {
   user?: User;
   users?: User[];
 }
+
 interface UserId {
   id: string;
 }
