@@ -11,11 +11,14 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  firstName    String?
-  lastName     String?
-  password     String
-  isActive     Boolean  @default(true)
-  registeredAt DateTime @default(now())
+  id                String   @id @default(uuid())
+  email             String   @unique
+  firstName         String?
+  lastName          String?
+  password          String?
+  lostPasswordToken String?
+  lang              String   @default("en")
+  isActive          Boolean  @default(true)
+  registeredAt      DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
