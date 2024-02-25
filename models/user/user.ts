@@ -1,10 +1,13 @@
 import { ZodIssue } from "zod";
 import { NextRequest } from "next/server";
 import { t } from "@/locales/translate";
-import { User } from "@prisma/client";
+import { User as PrismaUser } from "@prisma/client";
 import { idSchema, patchSchema, postSchema } from "./validation.schema";
 import { create, findUnique, findMany, remove, update } from "./db";
 
+type User = Omit<PrismaUser, 'password' > & {
+  password?: string | null;
+}
 interface ReturnObject {
   status: number;
   message?: string | ZodIssue[];
