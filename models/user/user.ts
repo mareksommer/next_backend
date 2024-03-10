@@ -79,3 +79,33 @@ export const deleteUser = async ({ id }: UserId): Promise<ReturnObject> => {
   return { status: 200, message: t("User deleted"), user };
 };
 
+export const authenticateUser = async ({
+  email,
+  password,
+}: AuthUser): Promise<ReturnObject> => {
+  const validation = authSchema.safeParse({ email, password });
+  if (!validation.success)
+    return { status: 400, message: validation.error.errors };
+
+  const userWithPassword = await findUniqueWithPassword({ where: { email } });
+  if (!userWithPassword || !userWithPassword.password)
+    return { status: 400, message: t("Invalid email or password") };
+
+  const passwordMatch = await compareHashAndString(
+    userWithPassword.password,
+    validation.data.password
+  );
+  if (!passwordMatch)
+    return { status: 400, message: t("Invalid email or password") };
+
+  const payload = {
+    id: userWithPassword.id,
+    email: userWithPassword.email,
+    firsName: userWithPassword.firstName,
+    lastName: userWithPassword.lastName,
+    isActive: userWithPassword.isActive,
+    lang: userWithPassword.lang,
+  };
+  const jwt = await generateToken(payload);
+  return { status: 200, message: t("User authenticated"), jwt };
+};
