@@ -1,10 +1,10 @@
-import { ZodIssue, z } from "zod";
+import { z } from "zod";
 
 export const postSchema = z.object({
   email: z.string().email(),
   firstName: z.string().nullable(),
   lastName: z.string().nullable(),
-  password: z.string().min(6),
+  password: z.string().min(6).optional(),
 });
 
 export const patchSchema = z.object({
@@ -17,4 +17,9 @@ export const patchSchema = z.object({
 
 export const idSchema = z.object({
   id: z.string(),
+});
+
+export const authSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
 });
