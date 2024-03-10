@@ -12,3 +12,9 @@ export const processRequest = async (callback: Function, args: Object | null): P
     return NextResponse.json({ status: 500, message: errorMessage});
   }
 }
+
+export const getPagination = (URLSearchParams: URLSearchParams): { take: number, skip: number } => {
+  const take = URLSearchParams.get("take") || "10";
+  const skip = URLSearchParams.get("skip") || "0";
+  return { take: parseInt(take), skip: parseInt(skip) };
+}
