@@ -18,30 +18,10 @@ import {
   postSchema,
 } from "./validation.schema";
 
-type User = Omit<PrismaUser, 'password' > & {
-  password?: string | null;
-}
-interface ReturnObject {
-  status: number;
-  message?: string | ZodIssue[];
-  user?: User;
-  users?: User[];
-}
+export const getUsers = async (request: NextRequest): Promise<ReturnObject> => {
+  const pagination = getPagination(request.nextUrl.searchParams);
 
-interface UserId {
-  id: string;
-}
-
-interface UpdateUserArgs {
-  request: NextRequest;
-  id: string;
-}
-
-
-export const getUsers = async (
-  request: NextRequest
-): Promise<ReturnObject> => {
-  const users = await findMany({ orderBy: { lastName: "asc" } });
+  const users = await findMany({ orderBy: { lastName: "asc" } }, pagination);
   return { status: 200, users };
 };
 
