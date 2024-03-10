@@ -4,5 +4,9 @@
   "User not found": "User not found",
   "User created": "User created",
   "User updated": "User updated",
-  "User deleted": "User deleted"
+  "User deleted": "User deleted",
+  "User authenticated": "User authenticated",
+  "Access denied. No token provided.": "Access denied. No token provided.",
+  "Access denied. Invalid token.": "Access denied. Invalid token.",
+  "Invalid email or password": "Invalid email or password"
 }

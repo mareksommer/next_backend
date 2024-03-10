@@ -4,5 +4,9 @@
   "User not found": "Uživatel nenalezen",
   "User created": "Uživatel vytvořen",
   "User updated": "Uživatel aktualizován",
-  "User deleted": "Uživatel smazán"
+  "User deleted": "Uživatel smazán",
+  "User authenticated": "Uživatel ověřen",
+  "Access denied. No token provided.": "Přístup odepřen. Nebyl poskytnut žádný token.",
+  "Access denied. Invalid token.": "Přístup odepřen. Neplatný token.",
+  "Invalid email or password": "Neplatný e-mail nebo heslo"
 }
