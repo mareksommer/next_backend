@@ -8,7 +8,7 @@ export const processRequest = async (callback: Function, args: Object | null): P
   }
   catch (error: any) {
     // TODO add erorr logging
-    const errorMessage = (error.message) ? error.message : t('SomethingWentWrong');
+    const errorMessage = (error.message) ? error.message : t('Something went wrong');
     return NextResponse.json({ status: 500, message: errorMessage});
   }
 }
