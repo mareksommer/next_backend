@@ -1,47 +1,71 @@
-import { z } from "zod";
+import { Pagination } from "@/models/types";
 import prisma from "@/prisma/client";
-import { User } from "@prisma/client";
+import { getHashFromString } from "@/services/auth";
+import { User as PrismaUser } from "@prisma/client";
+import omit from "lodash.omit";
+import { z } from "zod";
 import { patchSchema, postSchema } from "./validation.schema";
 
-export const findMany = async (conditions: any): Promise<User[]> => {
-  return await prisma.user.findMany(conditions);
-}
+type User = Omit<PrismaUser, "password" | "lostPasswordToken"> & {
+  password?: string | null;
+};
+
+export const findMany = async (
+  conditions: any,
+  { take, skip }: Pagination
+): Promise<User[]> => {
+  conditions.take = take;
+  conditions.skip = skip;
+  const dbUsers = await prisma.user.findMany(conditions);
+
+  return dbUsers.map((user) => omit(user, ["password", "lostPasswordToken"]));
+};
 
 export const findUnique = async (where: any): Promise<User | null> => {
-  return await prisma.user.findUnique(where);
+  const dbUser = await prisma.user.findUnique(where);
+  return omit(dbUser, ["password", "lostPasswordToken"]);
+};
+
+export const findUniqueWithPassword = async (
+  where: any
+): Promise<User | null> => {
+  return prisma.user.findUnique(where);
 };
 
 export const create = async (
   data: z.infer<typeof postSchema>
 ): Promise<User> => {
-  return await prisma.user.create({
-    data: {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-    },
+  const createData = {
+    ...data,
+    registeredAt: new Date(),
+    updatedAt: new Date(),
+  };
+  if (data.password)
+    createData.password = await getHashFromString(data.password);
+
+  const createdUser = await prisma.user.create({
+    data: createData,
   });
+  return omit(createdUser, ["password", "lostPasswordToken"]);
 };
 
 export const update = async (
   id: string,
   data: z.infer<typeof patchSchema>
 ): Promise<User | null> => {
-  const user = await prisma.user.findUnique({ where: { id } });
+  const user = await findUnique({ where: { id } });
   if (!user) return null;
+
+  const updateData = { ...data, updatedAt: new Date() };
+  if (data.password)
+    updateData.password = await getHashFromString(data.password);
 
   const updatedUser = await prisma.user.update({
     where: { id },
-    data: {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-    },
+    data: updateData,
   });
 
-  return updatedUser;
+  return omit(updatedUser, ["password", "lostPasswordToken"]);
 };
 
 export const remove = async (id: string): Promise<User | null> => {
@@ -49,5 +73,5 @@ export const remove = async (id: string): Promise<User | null> => {
   if (!user) return null;
 
   await prisma.user.delete({ where: { id } });
-  return user;
+  return omit(user, ["password", "lostPasswordToken"]);
 };
