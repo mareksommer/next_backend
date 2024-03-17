@@ -16,7 +16,10 @@ import {
   idSchema,
   patchSchema,
   postSchema,
+  lostPasswordSchema,
 } from "./validation.schema";
+import { sendEmail } from "@/services/email";
+import ResetPasswordEmail from "@/emails/ResetPassword";
 
 export const getUsers = async (request: NextRequest): Promise<ReturnObject> => {
   const pagination = getPagination(request.nextUrl.searchParams);
@@ -108,4 +111,36 @@ export const authenticateUser = async ({
   };
   const jwt = await generateToken(payload);
   return { status: 200, message: t("User authenticated"), jwt };
+};
+
+export const lostPassword = async (
+  request: NextRequest
+): Promise<ReturnObject> => {
+  const { email } = await request.json();
+  const validation = lostPasswordSchema.safeParse({ email });
+  if (!validation.success)
+    return { status: 400, message: validation.error.errors };
+
+  const user = await findUnique({ where: { email } });
+  if (!user) return { status: 404, message: t("User not found") };
+
+  const payload = {
+    email: user.email,
+  };
+  const resetPasswordToken = await generateToken(payload);
+  const resetPasswordLink = `${process.env.PUBLIC_APP_URL}/reset-password?token=${resetPasswordToken}`
+  await sendEmail({
+    to: user.email,
+    subject: t("Reset your password"),
+    react: <ResetPasswordEmail name={user.firstName} resetPasswordLink={resetPasswordLink} />
+  });
+
+  await update(user.id, { lostPasswordToken: resetPasswordToken });
+
+  return {
+    status: 200,
+    message: t(
+      "Instructions to reset your password have been sent to your email"
+    ),
+  };
 };
