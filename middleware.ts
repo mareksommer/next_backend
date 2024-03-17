@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import '@/locales/i18n';
 import { t } from "@/locales/translate";
 import { verifyToken } from "@/services/auth";
 
