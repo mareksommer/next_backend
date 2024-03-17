@@ -9,5 +9,9 @@
   "Access denied. No token provided.": "Přístup odepřen. Nebyl poskytnut žádný token.",
   "Access denied. Invalid token.": "Přístup odepřen. Neplatný token.",
   "Invalid email or password": "Neplatný e-mail nebo heslo",
-  "Instructions to reset your password have been sent to your email": "Instrukce k obnovení hesla byly odeslány na váš e-mail"
+  "Instructions to reset your password have been sent to your email": "Instrukce k obnovení hesla byly odeslány na váš e-mail",
+  "Reset Password": "Obnovit heslo",
+  "Hello": "Ahoj",
+  "You are receiving this email because we received a password reset request for your account.": "Tento e-mail jsme Vám zaslali, protože jsme obdrželi žádost o obnovení hesla k vášemu účetu.",
+  "Please follow this link to reset your password": "Následujte tento odkaz pro obnovení hesla"
 }

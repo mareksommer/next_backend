@@ -9,5 +9,9 @@
   "Access denied. No token provided.": "Access denied. No token provided.",
   "Access denied. Invalid token.": "Access denied. Invalid token.",
   "Invalid email or password": "Invalid email or password",
-  "Instructions to reset your password have been sent to your email": "Instrutions to reset your password have been sent to your email"
+  "Instructions to reset your password have been sent to your email": "Instrutions to reset your password have been sent to your email",
+  "Reset Password": "Reset Password",
+  "Hello": "Hello",
+  "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
+  "Please follow this link to reset your password": "Please follow this link to reset your password"
 }
