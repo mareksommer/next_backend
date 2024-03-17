@@ -1,12 +1,13 @@
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 export const getHashFromString = async (stringToHash: string): Promise<string> => {
+  const bcrypt = require("bcrypt");
   const salt = await bcrypt.genSalt(10)
   return bcrypt.hash(stringToHash, salt)
 }
 
 export const compareHashAndString = async (hash: string, stringToCompare: string): Promise<boolean> => {
+  const bcrypt = require("bcrypt");
   return bcrypt.compare(stringToCompare, hash)
 }
 
