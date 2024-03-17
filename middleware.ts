@@ -29,5 +29,5 @@ export function middleware(request: NextRequest) {
  * Match all request paths for api routes
  */
 export const config = {
-  matcher: "/((?api).*)",
+  matcher: "/api/:path*",
 };
