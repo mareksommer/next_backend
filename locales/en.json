@@ -8,5 +8,6 @@
   "User authenticated": "User authenticated",
   "Access denied. No token provided.": "Access denied. No token provided.",
   "Access denied. Invalid token.": "Access denied. Invalid token.",
-  "Invalid email or password": "Invalid email or password"
+  "Invalid email or password": "Invalid email or password",
+  "Instructions to reset your password have been sent to your email": "Instrutions to reset your password have been sent to your email"
 }
