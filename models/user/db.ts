@@ -17,12 +17,15 @@ export const findMany = async (
   conditions.take = take;
   conditions.skip = skip;
   const dbUsers = await prisma.user.findMany(conditions);
-
+  
+  if (!dbUsers) return [];
   return dbUsers.map((user) => omit(user, ["password", "lostPasswordToken"]));
 };
 
 export const findUnique = async (where: any): Promise<User | null> => {
   const dbUser = await prisma.user.findUnique(where);
+  
+  if (!dbUser) return null;
   return omit(dbUser, ["password", "lostPasswordToken"]);
 };
 
