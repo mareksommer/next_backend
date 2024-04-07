@@ -13,6 +13,9 @@ export const patchSchema = z.object({
   firstName: z.string().nullable().optional(),
   lastName: z.string().nullable().optional(),
   password: z.string().min(6).optional(),
+  lostPasswordToken: z.string().optional(),
+  lang: z.string().optional(),
+  isActive: z.boolean().optional(),
 });
 
 export const idSchema = z.object({
