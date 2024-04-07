@@ -53,10 +53,9 @@ export const create = async (
 };
 
 export const update = async (
-  id: string,
   data: z.infer<typeof patchSchema>
 ): Promise<User | null> => {
-  const user = await findUnique({ where: { id } });
+  const user = await findUnique({ where: { id: data.id } });
   if (!user) return null;
 
   const updateData = { ...data, updatedAt: new Date() };
@@ -64,7 +63,7 @@ export const update = async (
     updateData.password = await getHashFromString(data.password);
 
   const updatedUser = await prisma.user.update({
-    where: { id },
+    where: { id: data.id },
     data: updateData,
   });
 
