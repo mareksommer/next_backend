@@ -121,21 +121,26 @@ export const lostPassword = async (
   if (!validation.success)
     return { status: 400, message: validation.error.errors };
 
-  const user = await findUnique({ where: { email } });
+  const user = await findUniqueWithPassword({ where: { email } });
   if (!user) return { status: 404, message: t("User not found") };
 
   const payload = {
     email: user.email,
   };
-  const resetPasswordToken = await generateToken(payload);
-  const resetPasswordLink = `${process.env.PUBLIC_APP_URL}/reset-password?token=${resetPasswordToken}`
+  const lostPasswordToken = await generateToken(payload);
+  const resetPasswordLink = `${process.env.PUBLIC_APP_URL}/reset-password?token=${lostPasswordToken}`;
   await sendEmail({
     to: user.email,
     subject: t("Reset your password"),
-    react: <ResetPasswordEmail name={user.firstName} resetPasswordLink={resetPasswordLink} />
+    react: (
+      <ResetPasswordEmail
+        name={user.firstName}
+        resetPasswordLink={resetPasswordLink}
+      />
+    ),
   });
 
-  await update(user.id, { lostPasswordToken: resetPasswordToken });
+  await update({ id: user.id, lostPasswordToken });
 
   return {
     status: 200,
