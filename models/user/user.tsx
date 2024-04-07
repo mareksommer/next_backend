@@ -65,7 +65,7 @@ export const updateUser = async ({
   if (!validation.success)
     return { status: 400, message: validation.error.errors };
 
-  const user = await update(id, validation.data);
+  const user = await update(validation.data);
   if (!user) return { status: 404, message: t("User not found") };
 
   return { status: 200, message: t("User updated"), user };
