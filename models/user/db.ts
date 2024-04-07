@@ -31,7 +31,7 @@ export const findUnique = async (where: any): Promise<User | null> => {
 
 export const findUniqueWithPassword = async (
   where: any
-): Promise<User | null> => {
+): Promise<PrismaUser | null> => {
   return prisma.user.findUnique(where);
 };
 
