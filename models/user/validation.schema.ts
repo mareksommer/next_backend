@@ -7,6 +7,11 @@ export const postSchema = z.object({
   password: z.string().min(6).optional(),
 });
 
+export const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
 export const patchSchema = z.object({
   id: z.string(),
   email: z.string().email().optional(),
