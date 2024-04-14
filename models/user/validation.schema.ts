@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const postSchema = z.object({
   email: z.string().email(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
+  firstName: z.string().nullable().optional(),
+  lastName: z.string().nullable().optional(),
   password: z.string().min(6).optional(),
 });
 
