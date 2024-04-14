@@ -19,7 +19,7 @@
     "i18next": "^23.10.0",
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-http-backend": "^2.5.0",
-    "jsonwebtoken": "^9.0.2",
+    "jose": "^5.2.4",
     "lodash.omit": "^4.5.0",
     "lodash.pick": "^4.4.0",
     "next": "14.1.0",
