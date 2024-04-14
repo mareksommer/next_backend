@@ -13,5 +13,7 @@
   "Reset Password": "Obnovit heslo",
   "Hello": "Ahoj",
   "You are receiving this email because we received a password reset request for your account.": "Tento e-mail jsme Vám zaslali, protože jsme obdrželi žádost o obnovení hesla k vášemu účetu.",
-  "Please follow this link to reset your password": "Následujte tento odkaz pro obnovení hesla"
+  "Please follow this link to reset your password": "Následujte tento odkaz pro obnovení hesla",
+  "Password updated": "Heslo aktualizováno",
+  "Your password has been updated successfully. If you did not request this change, please contact us immediately.": "Vaše heslo bylo úspěšně aktualizováno. Pokud jste tuto změnu nevyžádali, neprodleně nás kontaktujte."
 }
