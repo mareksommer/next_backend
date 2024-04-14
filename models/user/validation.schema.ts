@@ -35,3 +35,8 @@ export const authSchema = z.object({
 export const lostPasswordSchema = z.object({
   email: z.string().email()
 });
+
+export const resetPasswordSchema = z.object({
+  newPassword: z.string(),
+  lostPasswordToken: z.string(),
+});
