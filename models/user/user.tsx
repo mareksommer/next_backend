@@ -82,10 +82,10 @@ export const deleteUser = async ({ id }: UserId): Promise<ReturnObject> => {
   return { status: 200, message: t("User deleted"), user };
 };
 
-export const authenticateUser = async ({
-  email,
-  password,
-}: AuthUser): Promise<ReturnObject> => {
+export const authenticateUser = async (
+  request: NextRequest
+): Promise<ReturnObject> => {
+  const { email, password } = await request.json();
   const validation = authSchema.safeParse({ email, password });
   if (!validation.success)
     return { status: 400, message: validation.error.errors };
