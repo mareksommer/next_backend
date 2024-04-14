@@ -10,7 +10,7 @@ import {
   remove,
   update,
 } from "./db";
-import { AuthUser, ReturnObject, UpdateUserArgs, UserId } from "./types";
+import { ReturnObject, UpdateUserArgs, UserId } from "./types";
 import {
   authSchema,
   idSchema,
@@ -18,9 +18,11 @@ import {
   postSchema,
   registerSchema,
   lostPasswordSchema,
+  resetPasswordSchema
 } from "./validation.schema";
 import { sendEmail } from "@/services/email";
 import ResetPasswordEmail from "@/emails/ResetPassword";
+import PasswordUpdatedEmail from "@/emails/PasswordUpdated";
 
 export const getUsers = async (request: NextRequest): Promise<ReturnObject> => {
   const pagination = getPagination(request.nextUrl.searchParams);
@@ -164,6 +166,37 @@ export const lostPassword = async (
     status: 200,
     message: t(
       "Instructions to reset your password have been sent to your email"
+    ),
+  };
+};
+
+export const resetPassword = async (
+  request: NextRequest
+): Promise<ReturnObject> => {
+  const { newPassword, lostPasswordToken } = await request.json();
+  const validation = resetPasswordSchema.safeParse({ newPassword, lostPasswordToken });
+  if (!validation.success)
+    return { status: 400, message: validation.error.errors };
+
+  const user = await findUniqueWithPassword({ where: { lostPasswordToken } });
+  if (!user) return { status: 404, message: t("User not found") };
+
+  await update({ id: user.id, password: validation.data.newPassword });
+
+  await sendEmail({
+    to: user.email,
+    subject: t("Password updated"),
+    react: (
+      <PasswordUpdatedEmail
+        name={user.firstName}
+      />
+    ),
+  });
+
+  return {
+    status: 200,
+    message: t(
+      "Your password has been updated. You can now log in with your new password."
     ),
   };
 };
