@@ -16,6 +16,7 @@ import {
   idSchema,
   patchSchema,
   postSchema,
+  registerSchema,
   lostPasswordSchema,
 } from "./validation.schema";
 import { sendEmail } from "@/services/email";
@@ -44,6 +45,23 @@ export const createUser = async (
 ): Promise<ReturnObject> => {
   const userAttrs = await request.json();
   const validation = postSchema.safeParse(userAttrs);
+  if (!validation.success)
+    return { status: 400, message: validation.error.errors };
+
+  const existingUser = await findUnique({
+    where: { email: validation.data.email },
+  });
+  if (existingUser) return { status: 400, message: t("User already exists") };
+
+  const user = await create(validation.data);
+  return { status: 201, message: t("User created"), user };
+};
+
+export const registerUser = async (
+  request: NextRequest
+): Promise<ReturnObject> => {
+  const userAttrs = await request.json();
+  const validation = registerSchema.safeParse(userAttrs);
   if (!validation.success)
     return { status: 400, message: validation.error.errors };
 
