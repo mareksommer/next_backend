@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import * as jose from 'jose'
 
 export const getHashFromString = async (stringToHash: string): Promise<string> => {
   const bcrypt = require("bcrypt");
@@ -11,21 +11,29 @@ export const compareHashAndString = async (hash: string, stringToCompare: string
   return bcrypt.compare(stringToCompare, hash)
 }
 
-export const generateToken = (payload: string | object | [], options?: { expiresIn?: string }): string => {
-  const secret = process.env.JWT_SECRET
-  if (!secret) throw new Error('JWT_SECRET not found')
-
+export const generateToken = async (payload: jose.JWTPayload, options?: { expiresIn?: string, alg?: string }): Promise<string> => {
+  const secretString = process.env.JWT_SECRET
+  if (!secretString) throw new Error('JWT_SECRET not found')
+  const secret = new TextEncoder().encode(secretString)
+  
   const expiresIn = options?.expiresIn || '1d'
-  const signOptions = { ...options, expiresIn }
-  return jwt.sign(payload, secret, signOptions)
+  const alg = options?.alg || 'HS256'
+
+  const jwt = await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg })
+    .setIssuedAt()
+    .setExpirationTime(expiresIn)
+    .sign(secret)
+  return jwt
 }
 
-export const verifyToken = (token: string): object | string | undefined | boolean => {
-  const secret = process.env.JWT_SECRET
-  if (!secret) throw new Error('JWT_SECRET not found')
+export const verifyToken = async (token: string): Promise<jose.JWTVerifyResult | boolean | undefined> => {
+  const secretString = process.env.JWT_SECRET
+  if (!secretString) throw new Error('JWT_SECRET not found')
+  const secret = new TextEncoder().encode(secretString)
 
   try {
-    return jwt.verify(token, secret)
+    return await jose.jwtVerify(token, secret)
   } catch (error: any) {
     return false
   }
