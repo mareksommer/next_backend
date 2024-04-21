@@ -18,11 +18,12 @@ import {
   postSchema,
   registerSchema,
   lostPasswordSchema,
-  resetPasswordSchema
+  resetPasswordSchema,
 } from "./validation.schema";
 import { sendEmail } from "@/services/email";
 import ResetPasswordEmail from "@/emails/ResetPassword";
 import PasswordUpdatedEmail from "@/emails/PasswordUpdated";
+import { verifyToken } from "@/services/auth";
 
 export const getUsers = async (request: NextRequest): Promise<ReturnObject> => {
   const pagination = getPagination(request.nextUrl.searchParams);
@@ -174,11 +175,21 @@ export const resetPassword = async (
   request: NextRequest
 ): Promise<ReturnObject> => {
   const { newPassword, lostPasswordToken } = await request.json();
-  const validation = resetPasswordSchema.safeParse({ newPassword, lostPasswordToken });
+  const validation = resetPasswordSchema.safeParse({
+    newPassword,
+    lostPasswordToken,
+  });
   if (!validation.success)
     return { status: 400, message: validation.error.errors };
 
-  const user = await findUniqueWithPassword({ where: { lostPasswordToken } });
+  const verifiedToken = await verifyToken(lostPasswordToken);
+  if (!verifiedToken || typeof verifiedToken === "boolean")
+    return { status: 401, message: t("Access denied. Invalid token.") };
+
+  const { payload } = verifiedToken;
+  const { email } = payload;
+
+  const user = await findUniqueWithPassword({ where: { email } });
   if (!user) return { status: 404, message: t("User not found") };
 
   await update({ id: user.id, password: validation.data.newPassword });
@@ -186,11 +197,7 @@ export const resetPassword = async (
   await sendEmail({
     to: user.email,
     subject: t("Password updated"),
-    react: (
-      <PasswordUpdatedEmail
-        name={user.firstName}
-      />
-    ),
+    react: <PasswordUpdatedEmail name={user.firstName} />,
   });
 
   return {
