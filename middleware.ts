@@ -22,7 +22,7 @@ function isExcludedPath(request: NextRequest) {
 /*
  * Middleware to verify the token
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   if (isExcludedPath(request))
     return NextResponse.next();
 
@@ -33,7 +33,7 @@ export function middleware(request: NextRequest) {
       message: t("Access denied. No token provided."),
     });
 
-  const verifiedToken = verifyToken(authToken);
+  const verifiedToken = await verifyToken(authToken);
   if (!verifiedToken)
     return NextResponse.json({
       status: 401,
