@@ -16,7 +16,7 @@ export const generateToken = async (payload: jose.JWTPayload, options?: { expire
   if (!secretString) throw new Error('JWT_SECRET not found')
   const secret = new TextEncoder().encode(secretString)
   
-  const expiresIn = options?.expiresIn || '1d'
+  const expiresIn = options?.expiresIn || '7d'
   const alg = options?.alg || 'HS256'
 
   const jwt = await new jose.SignJWT(payload)
