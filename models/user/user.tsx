@@ -134,6 +134,21 @@ export const authenticateUser = async (
   return { status: 200, message: t("User authenticated"), jwt };
 };
 
+export const refreshUserToken = async (
+  request: NextRequest
+): Promise<ReturnObject> => {
+  const authToken = request.headers.get("x-auth-token");
+  if (!authToken)
+    return { status: 401, message: t("Access denied. No token provided.") };
+
+  const verifiedToken = await verifyToken(authToken);
+  if (!verifiedToken || typeof verifiedToken === "boolean")
+    return { status: 401, message: t("Access denied. Invalid token.") };
+
+  const jwt = await generateToken(verifiedToken.payload);
+  return { status: 200, message: t("Token refreshed"), jwt };
+};
+
 export const lostPassword = async (
   request: NextRequest
 ): Promise<ReturnObject> => {
