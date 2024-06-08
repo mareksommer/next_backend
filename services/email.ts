@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+import { Resend, ErrorResponse } from "resend";
 
 const resend = new Resend(process.env.SENDGRID_API_KEY);
 
