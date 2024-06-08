@@ -125,7 +125,7 @@ export const authenticateUser = async (
   const payload = {
     id: userWithPassword.id,
     email: userWithPassword.email,
-    firsName: userWithPassword.firstName,
+    firstName: userWithPassword.firstName,
     lastName: userWithPassword.lastName,
     isActive: userWithPassword.isActive,
     lang: userWithPassword.lang,
