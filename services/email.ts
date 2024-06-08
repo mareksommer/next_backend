@@ -9,7 +9,7 @@ interface EmailOptions {
   react: JSX.Element;
 }
 
-export async function sendEmail(options: EmailOptions) {
+export async function sendEmail(options: EmailOptions): Promise<CreateEmailResponse> {
   const { from, to, subject, react } = options;
   resend.emails.send({
     from: from || process.env.EMAIL_FROM!,
