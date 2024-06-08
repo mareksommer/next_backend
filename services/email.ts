@@ -11,7 +11,8 @@ interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions): Promise<CreateEmailResponse> {
   const { from, to, subject, react } = options;
-  resend.emails.send({
+
+  return await resend.emails.send({
     from: from || process.env.EMAIL_FROM!,
     to: to,
     subject: subject,
