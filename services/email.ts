@@ -2,6 +2,11 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.SENDGRID_API_KEY);
 
+interface CreateEmailResponse {
+  data: { id: string } | null;
+  error: ErrorResponse | null;
+}
+
 interface EmailOptions {
   from?: string;
   to: string;
