@@ -1,4 +1,4 @@
-import '@/locales/i18n';
+import "@/locales/i18n";
 import { t } from "@/locales/translate";
 import { verifyToken } from "@/services/auth";
 import type { NextRequest } from "next/server";
@@ -23,22 +23,25 @@ function isExcludedPath(request: NextRequest) {
  * Middleware to verify the token
  */
 export async function middleware(request: NextRequest) {
-  if (isExcludedPath(request))
-    return NextResponse.next();
+  if (isExcludedPath(request)) return NextResponse.next();
 
   const authToken = request.headers.get("x-auth-token");
   if (!authToken)
-    return NextResponse.json({
-      status: 401,
-      message: t("Access denied. No token provided."),
-    });
+    return NextResponse.json(
+      {
+        errors: [{ message: t("Access denied. No token provided.") }],
+      },
+      { status: 401 }
+    );
 
   const verifiedToken = await verifyToken(authToken);
   if (!verifiedToken)
-    return NextResponse.json({
-      status: 401,
-      message: t("Access denied. Invalid token."),
-    });
+    return NextResponse.json(
+      {
+        errors: [{ message: t("Access denied. Invalid token.") }],
+      },
+      { status: 401 }
+    );
 }
 
 /*
