@@ -5,10 +5,7 @@ import { User as PrismaUser } from "@prisma/client";
 import omit from "lodash.omit";
 import { z } from "zod";
 import { patchSchema, postSchema } from "./validation.schema";
-
-type User = Omit<PrismaUser, "password" | "lostPasswordToken"> & {
-  password?: string | null;
-};
+import { User } from "./types";
 
 export const findMany = async (
   conditions: any,
