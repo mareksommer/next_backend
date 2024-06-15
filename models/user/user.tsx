@@ -28,7 +28,7 @@ import { User, Message, Errors } from "./types";
 
 type ReturnUsers = { data: User[] };
 type ReturnUser = { data: User };
-type ReturnJWT = { data: string };
+type ReturnJWT = { data: { jwt: string } };
 
 export const getUsers = async (
   request: NextRequest
@@ -164,7 +164,10 @@ export const authenticateUser = async (
     lang: userWithPassword.lang,
   };
   const jwt = await generateToken(payload);
-  return { status: 200, body: { message: t("User authenticated"), data: jwt } };
+  return {
+    status: 200,
+    body: { message: t("User authenticated"), data: { jwt } },
+  };
 };
 
 export const refreshUserToken = async (
@@ -185,7 +188,10 @@ export const refreshUserToken = async (
     };
 
   const jwt = await generateToken(verifiedToken.payload);
-  return { status: 200, body: { message: t("Token refreshed"), data: jwt } };
+  return {
+    status: 200,
+    body: { message: t("Token refreshed"), data: { jwt } },
+  };
 };
 
 export const lostPassword = async (
