@@ -4,6 +4,12 @@ import { verifyToken } from "@/services/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+type MiddlewareReturn = {
+  allowNext: boolean;
+  status?: number;
+  body?: { errors?: { message: string }[] };
+};
+
 const excludedPaths = [
   { route: "/api/auth", methods: ["POST"] },
   { route: "/api/lost-password", methods: ["POST"] },
