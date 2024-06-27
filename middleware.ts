@@ -29,25 +29,57 @@ function isExcludedPath(request: NextRequest) {
  * Middleware to verify the token
  */
 export async function middleware(request: NextRequest) {
-  if (isExcludedPath(request)) return NextResponse.next();
+  const preflightCors = preflightCorsMiddleware(request);
+  if (!preflightCors.allowNext)
+    return NextResponse.json(preflightCors.body, {
+      status: preflightCors.status,
+    });
+
+  const auth = await authMiddleware(request);
+  if (!auth.allowNext)
+    return NextResponse.json(auth.body, { status: auth.status });
+}
+function preflightCorsMiddleware(request: NextRequest): MiddlewareReturn {
+  if (request.method === "OPTIONS")
+    return {
+      allowNext: false,
+      status: 200,
+      body: {},
+    };
+
+  return {
+    allowNext: true,
+  };
+}
+async function authMiddleware(request: NextRequest): Promise<MiddlewareReturn> {
+  if (isExcludedPath(request))
+    return {
+      allowNext: true,
+    };
 
   const authToken = request.headers.get("x-auth-token");
   if (!authToken)
-    return NextResponse.json(
-      {
+    return {
+      allowNext: false,
+      status: 401,
+      body: {
         errors: [{ message: t("Access denied. No token provided.") }],
       },
-      { status: 401 }
-    );
+    };
 
   const verifiedToken = await verifyToken(authToken);
   if (!verifiedToken)
-    return NextResponse.json(
-      {
+    return {
+      allowNext: false,
+      status: 401,
+      body: {
         errors: [{ message: t("Access denied. Invalid token.") }],
       },
-      { status: 401 }
-    );
+    };
+
+  return {
+    allowNext: true,
+  };
 }
 
 /*
